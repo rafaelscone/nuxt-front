@@ -26,6 +26,8 @@
 </template>
 
 <script lang="ts" setup>
+import { defineProps, ref, onMounted, } from "vue";
+
 const _value = ref("");
 
 const props = defineProps({

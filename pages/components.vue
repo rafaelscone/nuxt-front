@@ -8,6 +8,7 @@
       <div @click="onSelect('text')" :class="`${menuClass} ${menuSelect === 'text' && 'bg-gray-200'}`"><DocumentTextIcon class="w-6 pr-1"/>Text</div>
       <div @click="onSelect('icons')" :class="`${menuClass} ${menuSelect === 'icons' && 'bg-gray-200'}`"><AcademicCapIcon class="w-6 pr-1"/>Icons</div>
       <div @click="onSelect('modal')" :class="`${menuClass} ${menuSelect === 'modal' && 'bg-gray-200'}`"><WindowIcon class="w-6 pr-1"/>Modal</div>
+      <div @click="onSelect('table')" :class="`${menuClass} ${menuSelect === 'table' && 'bg-gray-200'}`"><TableCellsIcon class="w-6 pr-1"/>Table</div>
     </div>
 
     <div class="p-4">
@@ -31,6 +32,18 @@
             <AcademicCapIcon class="h-5 w-5"/>
           </Button>
         </div>
+
+        <div>
+          <Text class="mb-2" type="subtitle">Switch</Text>
+
+          <div class="flex">
+            <Switch :on-change="value => switchText = value ? 'On' : 'Off'"/>
+            <span class="ml-2">
+              {{ switchText }}
+            </span>
+          </div>
+        </div>
+
       </div>
 
       <div v-else-if="menuSelect === 'inputs'">
@@ -92,15 +105,42 @@
         </Dialog>
         <Button @click="isOpenDialog = true">Open Dialog</Button>
       </div>
+
+      <div v-else-if="menuSelect === 'table'">
+        <Table>
+          <TableHead>
+            <TableTitle>Name</TableTitle>
+            <TableTitle>Title</TableTitle>
+            <TableTitle>Email</TableTitle>
+            <TableTitle>Hole</TableTitle>
+            <TableTitle>Options</TableTitle>
+          </TableHead>
+
+          <TableBody>
+            <TableRow v-for="person in people" :key="person.email">
+              <TableCell>{{ person.name }}</TableCell>
+              <TableCell>{{ person.title }}</TableCell>
+              <TableCell>{{ person.email }}</TableCell>
+              <TableCell>{{ person.role }}</TableCell>
+              <TableCell><Button>Active</Button></TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </div>
     </div>
 
   </div>
 </template>
 
 <script lang="ts" setup>
-import { BeakerIcon, CursorArrowRaysIcon, PencilSquareIcon, ArrowPathIcon, AcademicCapIcon, WindowIcon, DocumentTextIcon, } from "@heroicons/vue/24/solid";
+import { BeakerIcon, CursorArrowRaysIcon, PencilSquareIcon, ArrowPathIcon, AcademicCapIcon, WindowIcon, DocumentTextIcon, TableCellsIcon, } from "@heroicons/vue/24/solid";
 
-type Options = "buttons" | "inputs" | "loader" | "text" | "modal" | "icons";
+const route = useRoute();
+const router = useRouter();
+const api = useApi();
+const { $api } = useNuxtApp();
+
+type Options = "buttons" | "inputs" | "loader" | "text" | "modal" | "icons" | "table";
 
 const text = ref<string | undefined>("valor default");
 const menuSelect = ref<Options>("buttons");
@@ -109,7 +149,27 @@ const menuClass = "flex hover:bg-gray-200 p-2 rounded-sm cursor-pointer";
 const isOpenModal = ref(false);
 const isOpenDialog = ref(false);
 
+const switchText = ref<"Off" | "On">("Off");
+
+onMounted(() => {
+  api.get("/user")
+    .then(res => {
+      console.log(res.data);
+    });
+
+  const { option } = route.query as Record<string, Options>;
+
+  if(option){
+    menuSelect.value = option;
+  }
+});
+
 const onClose = () => isOpenModal.value = false;
+
+const people = [
+  { name: "Lindsay Walton", title: "Front-end Developer", email: "lindsay.walton@example.com", role: "Member" },
+  { name: "Lila Mur", title: "Front-end Developer", email: "ludo.chef@example.com", role: "Member" },
+];
 
 const onCloseDialog = (value: boolean) => {
   isOpenDialog.value = false;
@@ -117,8 +177,9 @@ const onCloseDialog = (value: boolean) => {
   console.log(value);
 };
 
-function onSelect(select: Options){
-  menuSelect.value = select;
+function onSelect(option: Options){
+  menuSelect.value = option;
+  router.push({ path: "/components", query: { option } });
 }
 
 function onChange(value: string){

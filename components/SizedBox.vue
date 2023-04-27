@@ -2,7 +2,9 @@
   <div :class="`w-[${w}px] h-[${h}px]`" />
 </template>
 
-<script setup>
+<script lang="ts" setup>
+import { defineProps, } from "vue";
+
 defineProps({
   w: {
     type: String,
@@ -13,6 +15,4 @@ defineProps({
     default: "0"
   },
 });
-
-console.log(w);
 </script>

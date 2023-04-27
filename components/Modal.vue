@@ -35,9 +35,9 @@
 </template>
 
 <script lang="ts" setup>
-
-import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, } from "@headlessui/vue";
+import { defineProps, } from "vue";
 import { XMarkIcon, } from "@heroicons/vue/24/outline";
+import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot, } from "@headlessui/vue";
 
 defineProps({
   onClose: {
