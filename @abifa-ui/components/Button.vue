@@ -12,8 +12,7 @@
       focus-visible:outline
       focus-visible:outline-2
       focus-visible:outline-offset-2
-      items-center gap-x-2
-      ${hasIcon && 'inline-flex'}
+      inline-flex items-center gap-x-2
       -focus-visible:outline-indigo-600
       ${!secondary && 'bg-primary text-white'}
       ${secondary && 'text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50'}
@@ -21,12 +20,11 @@
     "
     :disabled="disabled"
   >
-    <slot />
+   <slot /> 
   </button>
 </template>
 
 <script lang="ts" setup>
-import { defineProps, } from "vue";
 
 const props = defineProps({
   disabled: {
@@ -34,10 +32,6 @@ const props = defineProps({
     default: false,
   },
   secondary: {
-    type: Boolean,
-    default: false
-  },
-  hasIcon: {
     type: Boolean,
     default: false
   }

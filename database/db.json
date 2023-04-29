@@ -1,7 +1,9 @@
 {
   "user": [
     {
-      "name": "user test"
+      "firstname": "Rafael",
+      "lastname": "Schneider",
+      "id": 1
     }
   ]
 }
